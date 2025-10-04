@@ -1,7 +1,5 @@
-# Name of the GitHub Action
 name: Deploy New APK and Update JSON
 
-# This action runs automatically whenever a new release is 'published' on GitHub
 on:
   release:
     types: [published]
@@ -10,76 +8,84 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # This permission is crucial to allow the action to commit files back to your repo
+      contents: write
 
     steps:
-      # Step 1: Check out the 'main' branch of your repository
       - name: Checkout main branch
         uses: actions/checkout@v4
         with:
           ref: main
 
-      # Step 2: Download the APK from the release you just published
-      # It finds the asset named 'app-release.apk' and places it in the 'downloads' folder.
-      - name: Download release asset (app-release.apk)
-        uses: robinraju/release-downloader@v1.9
-        with:
-          repository: ${{ github.repository }}
-          tag: ${{ github.ref_name }} # e.g., v2.5.3
-          fileName: "app-release.apk"
-          target: "downloads/"
-          token: ${{ secrets.GITHUB_TOKEN }} # An automatic token provided by GitHub
+      - name: Clean up old APKs
+        run: find downloads -type f -name "*.apk" -delete
 
-      # Step 3: Set up the Node.js environment that our script will run in
+      # --- NEW AND IMPROVED DOWNLOAD STEP ---
+      # This step uses the GitHub API directly to find and download the APK.
+      - name: Download APK from release assets
+        run: |
+          # Use the GitHub API to get the download URL for the asset ending in .apk
+          # The GITHUB_TOKEN is automatically available to the workflow
+          APK_URL=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.ref_name }}" | \
+            jq -r '.assets[] | select(.name | endswith(".apk")) | .browser_download_url')
+
+          # Check if the URL was found. If not, fail the job.
+          if [ -z "$APK_URL" ]; then
+            echo "Error: Could not find an APK asset in the release."
+            exit 1
+          fi
+          
+          echo "Found APK URL: $APK_URL"
+          
+          # Download the asset using the URL
+          # The '-L' flag follows redirects, which is important for GitHub downloads
+          curl -L -o "downloads/app-release-${{ github.ref_name }}.apk" "$APK_URL"
+          
+          echo "Successfully downloaded APK."
+
+      # --- NO LONGER NEEDED ---
+      # The download step now saves the file with the correct name directly,
+      # so we can remove the separate "Rename APK" and "Verify" steps.
+
+      # The rest of the workflow remains the same...
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      # Step 4: Run a powerful Node.js script to create/update all necessary files
       - name: Update apk-info.json and version-check.json
         env:
-          # This special variable captures the description/notes you write for the GitHub Release
           RELEASE_NOTES: ${{ github.event.release.body }}
-          GITHUB_REPO: ${{ github.repository }} # e.g., YourUsername/YourRepoName
+          GITHUB_REPO: ${{ github.repository }}
+          NEW_APK_FILENAME: "app-release-${{ github.ref_name }}.apk"
         run: |
           const fs = require('fs');
-
-          // --- Part A: Update apk-info.json (for your download webpage) ---
+          const newApkFilename = process.env.NEW_APK_FILENAME;
           const apkInfoPath = './apk-info.json';
-          const apkPath = './downloads/app-release.apk';
+          const apkPath = `./downloads/${newApkFilename}`;
           
+          // Add a check to ensure the file exists before reading its stats
+          if (!fs.existsSync(apkPath)) {
+            console.error(`Error: The file ${apkPath} does not exist.`);
+            process.exit(1);
+          }
+
           const stats = fs.statSync(apkPath);
           const fileSizeInMB = (stats.size / (1024 * 1024)).toFixed(1);
-          
-          const versionName = "${{ github.ref_name }}".replace('v', ''); // Removes the 'v' from 'v2.5.3' -> '2.5.3'
+          const versionName = "${{ github.ref_name }}".replace('v', '');
           const today = new Date().toISOString().slice(0, 10);
-          
           const webInfo = {
             version: versionName,
             update_date: today,
             size: `${fileSizeInMB} MB`,
-            apk_url: `./downloads/app-release.apk`
+            apk_url: `./downloads/${newApkFilename}`
           };
           fs.writeFileSync(apkInfoPath, JSON.stringify(webInfo, null, 2));
-          console.log(`Updated ${apkInfoPath} for your webpage.`);
-
-          // --- Part B: Create/Update version-check.json (for your Android app) ---
-          const appCheckPath = './version-check.json'; // Will be created in the root
-          
-          // We will use the GitHub release tag for the versionCode. No need for a separate file.
-          // This assumes your tags are like v5, v6, etc., where the number is the versionCode.
-          // Or, for more complex versions, we'll derive it. For now, we'll use a smart approach.
-          // Example: v2.5.3 -> 20503. This is robust.
+          const appCheckPath = './version-check.json';
           const versionParts = versionName.split('.').map(part => parseInt(part, 10));
           const generatedVersionCode = (versionParts[0] * 10000) + (versionParts[1] * 100) + (versionParts[2] || 0);
-
-          // Get the release notes. If you didn't write any, it provides a default.
           const releaseNotes = process.env.RELEASE_NOTES || "General improvements and bug fixes.";
-
-          // Construct the permanent, raw download URL for the APK file on GitHub
-          const downloadUrl = `https://raw.githubusercontent.com/${process.env.GITHUB_REPO}/main/downloads/app-release.apk`;
-          
+          const downloadUrl = `https://raw.githubusercontent.com/${process.env.GITHUB_REPO}/main/downloads/${newApkFilename}`;
           const appCheckInfo = {
             versionCode: generatedVersionCode,
             versionName: versionName,
@@ -87,13 +93,10 @@ jobs:
             whatsNew: releaseNotes
           };
           fs.writeFileSync(appCheckPath, JSON.stringify(appCheckInfo, null, 4));
-          console.log(`Generated ${appCheckPath} with versionCode ${generatedVersionCode}.`);
         shell: node {0}
 
-      # Step 5: Commit ALL the changes back to your 'main' branch
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore(release): Auto-update APK and JSON for version ${{ github.ref_name }}"
-          # Tell the action which files have changed and need to be committed
-          file_pattern: "downloads/app-release.apk apk-info.json version-check.json"
+          file_pattern: "downloads/*.apk apk-info.json version-check.json"
