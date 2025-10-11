@@ -1,6 +1,6 @@
 {
-    "versionCode": 20506,
-    "versionName": "2.5.6",
-    "downloadUrl": "https://raw.githubusercontent.com/saadat-notebook/app/main/downloads/app-release-v2.5.6.apk",
-    "whatsNew": "-Fixed a bug in the swipe-to-refresh feature.\r\n-Improved session persistence on app close.\r\n-Added ability to save passwords to Google Password Manager.\r\n-New Dynamic Renamed Apk Files!"
+    "versionCode": 20507,
+    "versionName": "2.5.7",
+    "downloadUrl": "https://raw.githubusercontent.com/saadat-notebook/app/main/downloads/app-release-v2.5.7.apk",
+    "whatsNew": "-Persistent User Accounts – Stay logged in across sessions\r\n-Synced Bookmarks – Your bookmarks are now tied to your account\r\n-\"Forgot Password?\" Support – Secure recovery via email\r\n-Enhanced \"Contact Us\" – More ways to reach out and get help\r\n-Bug Fixes – Swipe-to-refresh and search issues resolved\r\n-General Improvements – UI upgrades and performance enhancements throughout"
 }
