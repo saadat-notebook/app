@@ -1,6 +1,6 @@
 {
-    "versionCode": 20509,
-    "versionName": "2.5.9",
-    "downloadUrl": "https://raw.githubusercontent.com/saadat-notebook/app/main/downloads/app-release-v2.5.9.apk",
-    "whatsNew": "Fixed cover page download not working!\r\nMinor UI improvements in Assignments & Practicals page."
+    "versionCode": 20603,
+    "versionName": "2.6.3",
+    "downloadUrl": "https://raw.githubusercontent.com/saadat-notebook/app/main/downloads/app-release-v2.6.3.apk",
+    "whatsNew": "Fixed cookie issues.\r\nAdded support for more downloadable file types.\r\nBug fixes and performance improvements."
 }
