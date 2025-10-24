@@ -1,6 +1,6 @@
 {
-    "versionCode": 20603,
-    "versionName": "2.6.3",
-    "downloadUrl": "https://raw.githubusercontent.com/saadat-notebook/app/main/downloads/app-release-v2.6.3.apk",
-    "whatsNew": "Fixed cookie issues.\r\nAdded support for more downloadable file types.\r\nBug fixes and performance improvements."
+    "versionCode": 20604,
+    "versionName": "2.6.4",
+    "downloadUrl": "https://raw.githubusercontent.com/saadat-notebook/app/main/downloads/app-release-v2.6.4.apk",
+    "whatsNew": "Improved download stability and responsiveness — prevents duplicate downloads, adds instant feedback, and enhances file handling for smoother performance."
 }
