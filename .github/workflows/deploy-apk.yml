@@ -89,8 +89,8 @@ jobs:
           const appCheckInfo = {
             versionCode: generatedVersionCode,
             versionName: versionName,
-            appUrl: "https://saadat-notebook.github.io/app/",
-            downloadUrl: downloadUrl,
+            downloadUrl: "https://saadat-notebook.github.io/app/",
+            apkUrl: downloadUrl,
             whatsNew: releaseNotes
           };
           fs.writeFileSync(appCheckPath, JSON.stringify(appCheckInfo, null, 4));
