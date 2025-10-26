@@ -1,6 +1,6 @@
 {
-    "versionCode": 20604,
-    "versionName": "2.6.4",
-    "downloadUrl": "https://raw.githubusercontent.com/saadat-notebook/app/main/downloads/app-release-v2.6.4.apk",
-    "whatsNew": "Improved download stability and responsiveness — prevents duplicate downloads, adds instant feedback, and enhances file handling for smoother performance."
+    "versionCode": 20605,
+    "versionName": "2.6.5",
+    "downloadUrl": "https://raw.githubusercontent.com/saadat-notebook/app/main/downloads/app-release-v2.6.5.apk",
+    "whatsNew": "1. Improved login persistence and auto-login reliability. \r\n2. Enhanced visual feedback with a smoother loading indicator animation."
 }
