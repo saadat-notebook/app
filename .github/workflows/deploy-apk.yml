@@ -89,6 +89,7 @@ jobs:
           const appCheckInfo = {
             versionCode: generatedVersionCode,
             versionName: versionName,
+            appUrl: "https://saadat-notebook.github.io/app/",
             downloadUrl: downloadUrl,
             whatsNew: releaseNotes
           };
