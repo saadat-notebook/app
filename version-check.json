@@ -1,7 +1,7 @@
 {
-    "versionCode": 20605,
-    "versionName": "2.6.5",
+    "versionCode": 20606,
+    "versionName": "2.6.6",
     "downloadUrl": "https://saadat-notebook.github.io/app/",
-    "apkUrl": "https://raw.githubusercontent.com/saadat-notebook/app/main/downloads/app-release-v2.6.5.apk",
-    "whatsNew": "1. Improved login persistence and auto-login reliability. \r\n2. Enhanced visual feedback with a smoother loading indicator animation."
+    "apkUrl": "https://raw.githubusercontent.com/saadat-notebook/app/main/downloads/app-release-v2.6.6.apk",
+    "whatsNew": "1. Fixed auto logout issue."
 }
