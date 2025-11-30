@@ -1,7 +1,7 @@
 {
-    "versionCode": 20608,
-    "versionName": "2.6.8",
+    "versionCode": 20609,
+    "versionName": "2.6.9",
     "downloadUrl": "https://saadat-notebook.github.io/app/",
-    "apkUrl": "https://raw.githubusercontent.com/saadat-notebook/app/main/downloads/app-release-v2.6.8.apk",
-    "whatsNew": "1. Model Test Generator: Added a new \"Model Test\" feature for users to create custom practice exams.\r\n2. Improved error handling to correctly display custom server error pages.\r\n3. You will now see proper \"Page Not Found\" and other error pages instead of the generic offline screen."
+    "apkUrl": "https://raw.githubusercontent.com/saadat-notebook/app/main/downloads/app-release-v2.6.9.apk",
+    "whatsNew": "1. Community Contributors: Selected students can now share resources directly with their batch.\r\n2. Uploader Badge: Resource cards now show the uploader’s name and photo.\r\n3. Contributor Zone: Active contributors get a dedicated dashboard to upload and manage content.\r\n4. Improved Dashboard: “Recently Added” now shows clear categories like Hand Notes or Books for faster browsing."
 }
